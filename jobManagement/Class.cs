@@ -1,4 +1,4 @@
-﻿namespace JobModel
+﻿namespace JobManagement.API.Models
 {
     public class Job
     {

@@ -1,19 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using JobListModels;
+using JobModel;
 
-namespace JobListData
+namespace JobDL
 {
-    public class SqlDbData
+    public class DL
     {
-        string connectionString = "Data Source=LAPTOP-2V85TBH6\\SQLEXPRESS01;Initial Catalog=JobList;Integrated Security=True;";
-        SqlConnection sqlConnection;
+        static string connectionString
 
-        public SqlDbData()
+
+     = "Server=tcp:20.2.24.32,1433; Database=JobList; User Id= sa; Password=Ramos.bsit21;";
+        static SqlConnection sqlConnection = new SqlConnection(connectionString);
+        static public void Connect()
         {
-            sqlConnection = new SqlConnection(connectionString);
+            sqlConnection.Open();
         }
+
 
         public List<Job> GetAllJobs()
         {

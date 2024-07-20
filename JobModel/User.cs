@@ -1,8 +1,10 @@
-﻿namespace JobListModels { 
-
-public class User
+﻿namespace JobModel
 {
-    public string Username { get; set; }
-    public string Password { get; set; }
-}
+    public class User
+    {
+
+
+        public string Username { get; set; }
+        public string Password { get; set; }
+    }
 }

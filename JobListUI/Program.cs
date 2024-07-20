@@ -1,25 +1,24 @@
 ﻿using System;
-using JobListServices;
-using JobListModels;
+using JobBL;
+using JobModel;
 
-namespace JobList
+namespace JobUI
 {
     class Program
     {
         static void Main(string[] args)
         {
-            UserGetServices userServices = new UserGetServices();
+            BL bl = new BL();
 
             Console.Write("Enter username: ");
             string username = Console.ReadLine();
 
             Console.Write("Enter password: ");
             string password = Console.ReadLine();
+            //DL.Connect();
 
-            if (userServices.ValidateUser(username, password))
+            if (bl.ValidateUser(username, password))
             {
-                JobGetServices jobServices = new JobGetServices();
-
                 while (true)
                 {
                     Console.WriteLine("Options:");
@@ -33,7 +32,7 @@ namespace JobList
                     switch (choice)
                     {
                         case "1":
-                            var jobs = jobServices.GetAllJobs();
+                            var jobs = bl.GetAllJobs();
                             Console.WriteLine("Job Lists:");
                             foreach (var job in jobs)
                             {
@@ -72,7 +71,7 @@ namespace JobList
                                     Location = newLocation
                                 };
 
-                                jobServices.AddNewJob(newJob);
+                                bl.AddNewJob(newJob);
                                 Console.WriteLine("New job added successfully.");
                             }
                             else
@@ -85,7 +84,7 @@ namespace JobList
                             Console.Write("Enter Job Title to update details: ");
                             string updateTitle = Console.ReadLine();
 
-                            var jobToUpdate = jobServices.GetJobByTitle(updateTitle);
+                            var jobToUpdate = bl.GetJobByTitle(updateTitle);
                             if (jobToUpdate != null)
                             {
                                 Console.Write($"Enter new Job Description (current: {jobToUpdate.JobDescription}): ");
@@ -105,18 +104,12 @@ namespace JobList
 
                                 if (doneUpdate.Equals("DONE", StringComparison.OrdinalIgnoreCase))
                                 {
-                                    Job updatedJob = new Job
-                                    {
-                                        JobTitle = updateTitle,
-                                        JobDescription = updateDescription,
-                                        Company = updateCompany,
-                                        Salary = updateSalary,
-                                        Location = updateLocation
-                                    };
+                                    jobToUpdate.JobDescription = updateDescription;
+                                    jobToUpdate.Company = updateCompany;
+                                    jobToUpdate.Salary = updateSalary;
+                                    jobToUpdate.Location = updateLocation;
 
-                                    jobServices.UpdateJob(updated
-You sent
-jobServices.UpdateJob(updatedJob);
+                                    bl.UpdateJob(jobToUpdate);
                                     Console.WriteLine("Job details updated successfully.");
                                 }
                                 else
@@ -134,21 +127,11 @@ jobServices.UpdateJob(updatedJob);
                             Console.Write("Enter Job Title to delete: ");
                             string deleteTitle = Console.ReadLine();
 
-                            var jobToDelete = jobServices.GetJobByTitle(deleteTitle);
+                            var jobToDelete = bl.GetJobByTitle(deleteTitle);
                             if (jobToDelete != null)
                             {
-                                Console.Write("Enter DONE to confirm deletion: ");
-                                string doneDelete = Console.ReadLine();
-
-                                if (doneDelete.Equals("DONE", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    jobServices.DeleteJob(deleteTitle);
-                                    Console.WriteLine("Job deleted successfully.");
-                                }
-                                else
-                                {
-                                    Console.WriteLine("Process cancelled. No changes made.");
-                                }
+                                bl.DeleteJob(deleteTitle);
+                                Console.WriteLine("Job deleted successfully.");
                             }
                             else
                             {
@@ -161,9 +144,9 @@ jobServices.UpdateJob(updatedJob);
                             break;
                     }
 
-                    Console.WriteLine("Do you want to continue? (yes/no): ");
+                    Console.WriteLine("Do you want to perform another operation? (yes/no): ");
                     string continueChoice = Console.ReadLine();
-                    if (!continueChoice.Equals("yes", StringComparison.OrdinalIgnoreCase))
+                    if (continueChoice.Equals("no", StringComparison.OrdinalIgnoreCase))
                     {
                         break;
                     }
@@ -171,7 +154,7 @@ jobServices.UpdateJob(updatedJob);
             }
             else
             {
-                Console.WriteLine("Invalid username or password. Access denied.");
+                Console.WriteLine("Invalid username or password.");
             }
         }
     }
